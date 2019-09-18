@@ -17,13 +17,15 @@ def face_detect():
 def video_detect():
     first_frame=None
     video=cv2.VideoCapture(0)
+    out = cv2.VideoWriter('output.mp4', -1, 20.0, (640,480))
 
     while True:
         check,frame=video.read()
         gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
         gray=cv2.GaussianBlur(gray,(21,21),0)
-
-
+        #if check==True:
+            #frame = cv2.flip(frame,0)
+            #out.write(frame)
         if first_frame is None:
             first_frame=gray
             continue
@@ -38,6 +40,9 @@ def video_detect():
                 continue
             (x,y,w,h)=cv2.boundingRect(contour)
             cv2.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),3)
+            frame = cv2.flip(frame,0)
+            frame = cv2.flip(frame,0)
+            out.write(frame)
         """cv2.imshow("capturing",gray)
         cv2.imshow("delta",delta_frame)
         cv2.imshow("Thresh",thresh_frame)"""
@@ -46,8 +51,6 @@ def video_detect():
         print(gray)
         if key==ord('c'):
             break
-
-
     video.release()
     cv2.destroyAllWindows
     print("hello")
