@@ -51,8 +51,8 @@ def video_detect():
             if key==ord('c'):
                 break
     except:
-	    print("Exception Occurred!!!")
-	finally:
+        print("Exception Occurred!!!")
+    finally:
         video.release()
         cv2.destroyAllWindows()
 
