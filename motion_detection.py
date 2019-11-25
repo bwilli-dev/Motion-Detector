@@ -52,7 +52,7 @@ category_index = label_map_util.create_category_index(categories)
 SAVE_OUTPUT=False
 
 cap = cv2.VideoCapture(0)
-out = cv2.VideoWriter('output.mp4', -1, 15.0, (640,480))
+out = cv2.VideoWriter('output.mp4', -1, 15.0, (640,480)) if SAVE_OUTPUT else None
 # Running the tensorflow session
 with detection_graph.as_default():
   with tf.compat.v1.Session(graph=detection_graph) as sess:
@@ -93,7 +93,8 @@ with detection_graph.as_default():
           cv2.destroyAllWindows()
           cap.release()
           break
-out.close()
+if SAVE_OUTPUT:
+	out.close()
 
 
 
