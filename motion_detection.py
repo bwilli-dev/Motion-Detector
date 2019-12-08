@@ -49,10 +49,10 @@ category_index = label_map_util.create_category_index(categories)
 
 #intializing the web camera device
 
-SAVE_OUTPUT=False
-
+SAVE_OUTPUT=True
+MIN_DETECT=0.4
 cap = cv2.VideoCapture(0)
-out = cv2.VideoWriter('output.mp4', -1, 15.0, (640,480)) if SAVE_OUTPUT else None
+out = cv2.VideoWriter('output.mp4', -1, 25.0, (640,480)) if SAVE_OUTPUT else None
 # Running the tensorflow session
 with detection_graph.as_default():
   with tf.compat.v1.Session(graph=detection_graph) as sess:
@@ -85,16 +85,15 @@ with detection_graph.as_default():
       img=cv2.resize(image_np,(640,480))
       cv2.imshow('Human_Detect',img)
       if SAVE_OUTPUT:
-	      #Write If It is Human With detection over 50%
-		  #Class Contains The Object of Class Person-1
-		  #Score Contains Score Of that Class
-          out.write(img)
+          found=np.nonzero(scores>=MIN_DETECT)
+          if 1 in classes[found]:
+            out.write(img)          
       if cv2.waitKey(25) & 0xFF == ord('q'):
           cv2.destroyAllWindows()
           cap.release()
           break
 if SAVE_OUTPUT:
-	out.close()
+    out.close()
 
 
 
