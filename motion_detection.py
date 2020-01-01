@@ -63,15 +63,15 @@ category_index = label_map_util.create_category_index(categories)
 
 SAVE_OUTPUT=True
 MIN_DETECT=0.4
-FPS=25.0
+FPS=10.0
 RESXY=(640,480)
-NOTIFY=True
+NOTIFY=False
 PHNUM="9999999999"  #Phone Number To Notify
-
+TIMESTAMP=datetime.now().strftime('%c').replace("/","_").replace(":","_").replace("-","_")
 
 cap = cv2.VideoCapture(0)
 if SAVE_OUTPUT:
-	out = cv2.VideoWriter('output.mp4', -1, FPS, RESXY) if SAVE_OUTPUT else None
+	out = cv2.VideoWriter('output_'+TIMESTAMP+'.mp4', -1, FPS, RESXY) if SAVE_OUTPUT else None
 # Running the tensorflow session
 with detection_graph.as_default():
 	with tf.compat.v1.Session(graph=detection_graph) as sess:
@@ -109,9 +109,8 @@ with detection_graph.as_default():
 					cv2.putText(img,datetime.now().strftime('%c'),(10,50), cv2.FONT_HERSHEY_SIMPLEX, 1,(255,255,255),2)
 					out.write(img)
 					NOTIFY=not alert(PHNUM) if NOTIFY else False
-			if cv2.waitKey(25) & 0xFF == ord('q'):
-				cv2.destroyAllWindows()
-				cap.release()
-				break
+			cv2.waitKey(1)
+		cv2.destroyAllWindows()
+		cap.release()
 if SAVE_OUTPUT:
 	out.close()
